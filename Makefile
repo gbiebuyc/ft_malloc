@@ -16,7 +16,7 @@ endif
 NAME = libft_malloc_$(HOSTTYPE).so
 SRC = src/main.c
 OBJ = $(SRC:.c=.o)
-CFLAGS = -I ./libft #-Wall -Wextra -Werror
+CFLAGS = -I ./libft # -fPIC #-Wall -Wextra -Werror
 LDFLAGS = -L ./libft -lft
 .PHONY: all clean fclean re
 
@@ -24,7 +24,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	make -C ./libft
-	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS)
+	$(CC) -shared -o $(NAME) $(OBJ) $(LDFLAGS)
 
 clean:
 	#make -C ./libft clean
