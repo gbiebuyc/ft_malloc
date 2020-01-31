@@ -19,8 +19,7 @@ size_t	get_zone_prealloc_size(size_t elem_size, size_t pagesize)
 	size_t	result;
 
 	result = 100 * (sizeof(t_node) + elem_size);
-	while(result % pagesize)
-		result += (sizeof(t_node) + elem_size);
+	result += (pagesize - (result % pagesize)) % pagesize;
 	return (result);
 }
 

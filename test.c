@@ -11,14 +11,9 @@ int main()
 {
     void *ptr;
 
-    show_alloc_mem();
-    write(1, "\n", 1);
+	for (int i = 0; i < 102; i++)
+    	ptr = malloc(256);
 
-    ptr = malloc(42);
-    show_alloc_mem();
-    write(1, "\n", 1);
-
-    ptr = malloc(43);
     show_alloc_mem();
     write(1, "\n", 1);
 

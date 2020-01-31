@@ -21,13 +21,15 @@ CFLAGS = -I ./libft -fPIC #-Wall -Wextra -Werror
 LDFLAGS = -L ./libft -lft
 .PHONY: all clean fclean re
 
-all: $(NAME)
+all: $(NAME) a.out
+
+a.out: test.c
+	gcc test.c -L. -lft_malloc -Wl,-rpath,.
 
 $(NAME): $(OBJ)
 	make -C ./libft
 	$(CC) -shared -o $(NAME) $(OBJ) $(LDFLAGS)
 	ln -sf $(NAME) libft_malloc.so
-	gcc test.c -L. -lft_malloc -Wl,-rpath,.
 
 clean:
 	#make -C ./libft clean
