@@ -16,8 +16,8 @@
 # include <libft.h>
 # include <sys/mman.h>
 
-# define TINY_MAX 0x100
-# define SMALL_MAX 0x1000
+# define TINY 0x100
+# define SMALL 0x1000
 
 typedef struct		s_node
 {
