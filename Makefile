@@ -26,8 +26,8 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	make -C ./libft
 	$(CC) -shared -o $(NAME) $(OBJ) $(LDFLAGS)
-	ln -sF $(NAME) libft_malloc.so
-	gcc test.c -L. -lft_malloc
+	ln -sf $(NAME) libft_malloc.so
+	gcc test.c -L. -lft_malloc -Wl,-rpath,.
 
 clean:
 	#make -C ./libft clean
