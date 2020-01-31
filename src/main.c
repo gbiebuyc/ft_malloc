@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gbiebuyc <gbiebuyc@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/31 15:25:08 by gbiebuyc          #+#    #+#             */
+/*   Updated: 2020/01/31 15:25:09 by gbiebuyc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_malloc.h"
+
+t_data g_data = {0};
 
 size_t	get_zone_prealloc_size(size_t elem_size, size_t pagesize)
 {
@@ -15,22 +29,17 @@ void free(void *ptr)
 	ft_printf("yolo\n");
 }
 
-void	init()
-{
-	g_data.tiny.prealloc_size = get_zone_prealloc_size(TINY_MAX, getpagesize());
-	g_data.small.prealloc_size = get_zone_prealloc_size(SMALL_MAX, getpagesize());
-	g_data.tiny.head = mmap(0, g_data.tiny.prealloc_size,
-		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-	g_data.small.head = mmap(0, g_data.small.prealloc_size,
-		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-	g_data.tiny.head->is_free = true;
-	g_data.small.head->is_free = true;
-}
-
 char	*find_free_block(t_zone *z, size_t sz)
 {
 	t_node *node;
 
+	if (!z->head)
+	{
+		z->prealloc_size = get_zone_prealloc_size(TINY_MAX, getpagesize());
+		z->head = mmap(0, z->prealloc_size,
+			PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+		z->head->is_free = true;
+	}
 	node = z->head;
 	while (node)
 	{
@@ -41,22 +50,8 @@ char	*find_free_block(t_zone *z, size_t sz)
 	return (0);
 }
 
-void	show_alloc_mem()
-{
-	size_t	total;
-
-	total = 0;
-	if (g_data.tiny.head)
-		ft_printf("TINY : %x\n", g_data.tiny.head);
-	if (g_data.small.head)
-		ft_printf("SMALL : %x\n", g_data.small.head);
-	ft_printf("Total : %d bytes\n", total);
-}
-
 void	*malloc(size_t size)
 {
-	if (!g_data.tiny.head)
-		init();
 	if (size <= TINY_MAX)
 		return (find_free_block(&g_data.tiny, size));
 	else if (size <= SMALL_MAX)

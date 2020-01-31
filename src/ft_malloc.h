@@ -38,6 +38,8 @@ typedef struct		s_data
 	t_zone			small;
 }					t_data;
 
-t_data g_data = {0};
+extern t_data g_data;
+
+void				show_alloc_mem();
 
 #endif
