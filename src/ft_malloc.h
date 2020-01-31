@@ -14,9 +14,6 @@
 # define FT_MALLOC_H
 
 # include <libft.h>
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
 # include <sys/mman.h>
 
 # define TINY_MAX 0x100
@@ -29,14 +26,18 @@ typedef struct		s_node
 	bool			is_free;
 }					t_node;
 
+typedef struct		s_zone
+{
+	t_node			*head;
+	size_t			prealloc_size;
+}					t_zone;
+
 typedef struct		s_data
 {
-	t_node			*head_tiny;
-	t_node			*head_small;
-	size_t			tiny_zone_size;
-	size_t			small_zone_size;
+	t_zone			tiny;
+	t_zone			small;
 }					t_data;
 
-t_data d = {0};
+t_data g_data = {0};
 
 #endif

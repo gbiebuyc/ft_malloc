@@ -1,14 +1,20 @@
-#include <stdlib.h>
-#include <stdio.h>
- #include <unistd.h>
 
+#include <stdlib.h>
+#include <unistd.h>
+
+void free(void *ptr);
+void *malloc(size_t size);
+void *realloc(void *ptr, size_t size);
+void show_alloc_mem();
 
 int main()
 {
-    // char buf[20];
-    // read(0, buf, 20);
-    // puts(buf);
-    malloc(42);
-    free(42);
+    void *ptr;
 
+    show_alloc_mem();
+    write(1, "\n", 1);
+    ptr = malloc(42);
+    show_alloc_mem();
+    write(1, "\n", 1);
+    free(ptr);
 }
