@@ -38,15 +38,19 @@ char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 		z->prealloc_size = get_zone_prealloc_size(max_sz, getpagesize());
 		z->head = mmap(0, z->prealloc_size,
 			PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+		z->head->size = sz;
+		z->head->next = NULL;
 		z->head->is_free = true;
+		return ((char*)(z->head + 1));
 	}
 	node = z->head;
 	while (node)
 	{
-		if (node->is_free)
+		if (node->is_free && node->size >= sz)
 		{
 			node->size = sz;
-			return ((char*)node + sizeof(t_node));
+			node->is_free = false;
+			return ((char*)(node + 1));
 		}
 		node = node->next;
 	}
