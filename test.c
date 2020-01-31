@@ -18,6 +18,10 @@ int main()
     show_alloc_mem();
     write(1, "\n", 1);
 
+    ptr = malloc(43);
+    show_alloc_mem();
+    write(1, "\n", 1);
+
     // show_alloc_mem();
     // write(1, "\n", 1);
     

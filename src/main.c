@@ -52,6 +52,14 @@ char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 			node->is_free = false;
 			return ((char*)(node + 1));
 		}
+		if (!node->next)
+		{
+			node->next = (t_node*)((char*)(node + 1) + node->size);
+			node->next->size = sz;
+			node->next->is_free = false;
+			node->next->next = NULL;
+			return ((char*)(node->next + 1));
+		}
 		node = node->next;
 	}
 	return (0);
