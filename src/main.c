@@ -28,51 +28,49 @@ void free(void *ptr)
 	ft_printf("yolo\n");
 }
 
+void	allocate_node(t_node **node, t_zone *z, size_t sz)
+{
+		(*node) = mmap(0, z->prealloc_size,
+			PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+		(*node)->size = sz;
+		(*node)->next = NULL;
+		(*node)->is_free = false;
+		return (*node);
+}
+
 char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 {
-	t_node *node;
-	size_t curr_sz;
+	t_node	*node;
+	t_node	*last;
+	char	*base;
 
 	if (!z->head)
 	{
 		z->prealloc_size = get_prealloc_size(max_sz, getpagesize());
-		z->head = mmap(0, z->prealloc_size,
-			PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-		z->head->size = sz;
-		z->head->next = NULL;
-		z->head->is_free = true;
-		return ((char*)(z->head + 1));
+		return (allocate_node(&z->head, z, sz) + 1);
 	}
 	node = z->head;
-	curr_sz = 0;
+	last = NULL;
+	base = (char*)z->head;
 	while (node)
 	{
-		curr_sz += sizeof(t_node) + node->size;
-		if (curr_sz >= z->prealloc_size)
-			curr_sz = sizeof(t_node) + node->size;
+		if (node < base || (char*)node - base >= z->prealloc_size)
+			base = (char*)node;
 		if (node->is_free && node->size >= sz)
 		{
 			node->size = sz;
 			node->is_free = false;
 			return ((char*)(node + 1));
 		}
-		if (!node->next)
-		{
-			if (curr_sz + sizeof(t_node) + sz >= z->prealloc_size)
-				
-			node->next = (t_node*)((char*)(node + 1) + node->size);
-			// if (node->next - base > z->prealloc_size)
-			// {
-			// 	mmap();
-			// }
-			node->next->size = sz;
-			node->next->is_free = false;
-			node->next->next = NULL;
-			return ((char*)(node->next + 1));
-		}
+		last = node;
 		node = node->next;
 	}
-	return (0);
+	if (!last || (char*)(last + 1) + last->size - base >= z->prealloc_size)
+		return (allocate_node(&last->next, z, sz) + 1);
+	last->next->size = sz;
+	last->next->is_free = false;
+	last->next->next = NULL;
+	return ((char*)(node->next + 1));
 }
 
 void	*malloc(size_t size)
