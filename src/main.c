@@ -14,7 +14,7 @@
 
 t_data g_data = {0};
 
-size_t	get_zone_prealloc_size(size_t elem_size, size_t pagesize)
+size_t	get_prealloc_size(size_t elem_size, size_t pagesize)
 {
 	size_t	result;
 
@@ -31,10 +31,11 @@ void free(void *ptr)
 char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 {
 	t_node *node;
+	size_t curr_sz;
 
 	if (!z->head)
 	{
-		z->prealloc_size = get_zone_prealloc_size(max_sz, getpagesize());
+		z->prealloc_size = get_prealloc_size(max_sz, getpagesize());
 		z->head = mmap(0, z->prealloc_size,
 			PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 		z->head->size = sz;
@@ -43,8 +44,12 @@ char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 		return ((char*)(z->head + 1));
 	}
 	node = z->head;
+	curr_sz = 0;
 	while (node)
 	{
+		curr_sz += sizeof(t_node) + node->size;
+		if (curr_sz >= z->prealloc_size)
+			curr_sz = sizeof(t_node) + node->size;
 		if (node->is_free && node->size >= sz)
 		{
 			node->size = sz;
@@ -53,7 +58,13 @@ char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 		}
 		if (!node->next)
 		{
+			if (curr_sz + sizeof(t_node) + sz >= z->prealloc_size)
+				
 			node->next = (t_node*)((char*)(node + 1) + node->size);
+			// if (node->next - base > z->prealloc_size)
+			// {
+			// 	mmap();
+			// }
 			node->next->size = sz;
 			node->next->is_free = false;
 			node->next->next = NULL;
