@@ -11,8 +11,8 @@ int main()
 {
     void *ptr;
 
-	for (int i = 0; i < 102; i++)
-    	ptr = malloc(256);
+	for (int i = 0; i < 110; i++)
+    	ptr = malloc(4096);
 
     show_alloc_mem();
     write(1, "\n", 1);

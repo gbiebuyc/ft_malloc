@@ -12,14 +12,20 @@
 
 #include "ft_malloc.h"
 
-size_t	print_zone(t_node *node, char *zone_name)
+size_t	print_zone(t_zone *z, t_node *node, char *zone_name)
 {
 	size_t ret;
+	char	*base;
 
 	ret = 0;
-	ft_printf("%s : %#x\n", zone_name, node);
+	base = (char*)node;
+	ft_printf("%x\n",z->prealloc_size);
 	while (node)
 	{
+		if ((char*)node < base || (char*)node - base >= z->prealloc_size)
+			base = (char*)node;
+		if ((char*)node == base)
+			ft_printf("%s : %#x\n", zone_name, base);
 		ft_printf("%#x - %#x : %d bytes\n", node + 1,
 			(char*)(node + 1) + node->size, node->size);
 		ret += node->size;
@@ -34,8 +40,8 @@ void	show_alloc_mem()
 
 	total = 0;
 	if (g_data.tiny.head)
-		total += print_zone(g_data.tiny.head, "TINY");
+		total += print_zone(&g_data.tiny, g_data.tiny.head, "TINY");
 	if (g_data.small.head)
-		total += print_zone(g_data.small.head, "SMALL");
+		total += print_zone(&g_data.small, g_data.small.head, "SMALL");
 	ft_printf("Total : %d bytes\n", total);
 }
