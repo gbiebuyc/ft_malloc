@@ -23,33 +23,38 @@ size_t	get_prealloc_size(size_t elem_size, size_t pagesize)
 	return (result);
 }
 
-bool	find_node(t_node *haystack, t_node *needle, size_t *sz)
+bool	find_and_free_node(t_node **haystack, t_node *needle, bool unmap)
 {
-	while (haystack)
+	size_t tmp;
+
+	while (*haystack)
 	{
-		if (haystack == needle)
+		if (*haystack == needle)
 		{
-			*sz = haystack->size;
+			(*haystack)->is_free = true;
+			if (unmap)
+			{
+				tmp = (*haystack)->size;
+				(*haystack) = (*haystack)->next;
+				if (munmap((void*)needle, tmp) < 0)
+					return (false);
+			}
 			return (true);
 		}
-		haystack = haystack->next;
+		haystack = &((*haystack)->next);
 	}
 	return (false);
 }
 
 void free(void *ptr)
 {
-	// size_t	sz;
-
-	// if (!ptr)
-	// 	return ;
-	// ptr -= sizeof(t_node);
-	// sz = 0;
-	// found = false;
-	// node = g_data.tiny.head;
-	// if (!find_node(g_data.tiny.head, (t_node*)ptr, &sz))
-	// 	if (!find_node(g_data.small.head, (t_node*)ptr, &sz))
-	ft_printf("yolo\n");
+	if (!ptr)
+		return ;
+	ptr -= sizeof(t_node);
+	if (!find_and_free_node(&g_data.tiny.head, (t_node*)ptr, false) &&
+			!find_and_free_node(&g_data.small.head, (t_node*)ptr, false) &&
+				!find_and_free_node(&g_data.large, (t_node*)ptr, true))
+		*(int*)0 = 0;
 }
 
 char	*allocate_node(t_node **node, t_zone *z, size_t sz)
