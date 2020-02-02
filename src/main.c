@@ -23,8 +23,32 @@ size_t	get_prealloc_size(size_t elem_size, size_t pagesize)
 	return (result);
 }
 
+bool	find_node(t_node *haystack, t_node *needle, size_t *sz)
+{
+	while (haystack)
+	{
+		if (haystack == needle)
+		{
+			*sz = haystack->size;
+			return (true);
+		}
+		haystack = haystack->next;
+	}
+	return (false);
+}
+
 void free(void *ptr)
 {
+	// size_t	sz;
+
+	// if (!ptr)
+	// 	return ;
+	// ptr -= sizeof(t_node);
+	// sz = 0;
+	// found = false;
+	// node = g_data.tiny.head;
+	// if (!find_node(g_data.tiny.head, (t_node*)ptr, &sz))
+	// 	if (!find_node(g_data.small.head, (t_node*)ptr, &sz))
 	ft_printf("yolo\n");
 }
 
