@@ -30,12 +30,12 @@ void free(void *ptr)
 
 char	*allocate_node(t_node **node, t_zone *z, size_t sz)
 {
-		(*node) = mmap(0, z->prealloc_size,
-			PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-		(*node)->size = sz;
-		(*node)->next = NULL;
-		(*node)->is_free = false;
-		return ((char*)(*node + 1));
+	(*node) = mmap(0, z->prealloc_size,
+		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+	(*node)->size = sz;
+	(*node)->next = NULL;
+	(*node)->is_free = false;
+	return ((char*)(*node + 1));
 }
 
 char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
@@ -74,6 +74,18 @@ char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 	return ((char*)(last->next + 1));
 }
 
+char	*alloc_large(t_node **node, size_t sz)
+{
+	while (*node)
+		node = &((*node)->next);
+	(*node) = mmap(0, sizeof(t_node) + sz,
+		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+	(*node)->size = sz;
+	(*node)->next = NULL;
+	(*node)->is_free = false;
+	return ((char*)(*node + 1));
+}
+
 void	*malloc(size_t size)
 {
 	if (size <= TINY)
@@ -81,7 +93,7 @@ void	*malloc(size_t size)
 	else if (size <= SMALL)
 		return (find_free_block(&g_data.small, size, SMALL));
 	else
-		;
+		return (alloc_large(&g_data.large, size));
 	ft_printf("[debug] malloc failed.");
 	return (0);
 }

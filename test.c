@@ -1,18 +1,16 @@
 
 #include <stdlib.h>
 #include <unistd.h>
-
-void free(void *ptr);
-void *malloc(size_t size);
-void *realloc(void *ptr, size_t size);
-void show_alloc_mem();
+#include "include/ft_malloc.h"
 
 int main()
 {
     void *ptr;
 
-	for (int i = 0; i < 110; i++)
-    	ptr = malloc(4096);
+	for (int i = 0; i < 3; i++)
+    	ptr = malloc(3);
+	for (int i = 0; i < 3; i++)
+    	ptr = malloc(5000);
 
     show_alloc_mem();
     write(1, "\n", 1);
