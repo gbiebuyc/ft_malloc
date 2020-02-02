@@ -31,6 +31,8 @@ bool	find_and_free_node(t_node **haystack, t_node *needle, bool unmap)
 	{
 		if (*haystack == needle)
 		{
+			if ((*haystack)->is_free)
+				return (false);
 			(*haystack)->is_free = true;
 			if (unmap)
 			{
@@ -51,9 +53,9 @@ void free(void *ptr)
 	if (!ptr)
 		return ;
 	ptr -= sizeof(t_node);
-	if (!find_and_free_node(&g_data.tiny.head, (t_node*)ptr, false) &&
-			!find_and_free_node(&g_data.small.head, (t_node*)ptr, false) &&
-				!find_and_free_node(&g_data.large, (t_node*)ptr, true))
+	if (!find_and_free_node(&g_data.tiny.head, ptr, false) &&
+			!find_and_free_node(&g_data.small.head, ptr, false) &&
+				!find_and_free_node(&g_data.large, ptr, true))
 		*(int*)0 = 0;
 }
 
@@ -127,10 +129,33 @@ void	*malloc(size_t size)
 	return (0);
 }
 
-// void *realloc(void *ptr, size_t size)
-// {
-// 	write(1, "realloc\n", 8);
-// 	// char *new = malloc(size);
-// 	// memcpy(new, ptr, )
-// 	return 0;
-// }
+bool	find_node_size(t_node *haystack, t_node *needle, size_t *sz)
+{
+	while (haystack)
+	{
+		if (haystack == needle)
+		{
+			if (haystack->is_free)
+				return (false);
+			*sz = haystack->size;
+			return (true);
+		}
+		haystack = haystack->next;
+	}
+	return (false);
+}
+
+void *realloc(void *ptr, size_t new_sz)
+{
+	size_t	sz;
+	char	*new_ptr;
+	
+	if (!find_node_size(g_data.tiny.head, ptr - sizeof(t_node), &sz) &&
+		!find_node_size(g_data.small.head, ptr - sizeof(t_node), &sz) &&
+		!find_node_size(g_data.large, ptr - sizeof(t_node), &sz))
+		return (NULL);
+	new_ptr = malloc(new_sz);
+	ft_memcpy(new_ptr, ptr, sz);
+	free(ptr);
+	return (new_ptr);
+}
