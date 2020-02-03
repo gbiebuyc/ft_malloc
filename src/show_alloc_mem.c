@@ -23,11 +23,14 @@ size_t	print_zone(t_zone *z, t_node *node, char *zone_name)
 	{
 		if ((char*)node < base || (char*)node - base >= z->prealloc_size)
 			base = (char*)node;
-		if ((char*)node == base)
-			ft_printf("%s : %#x\n", zone_name, base);
-		ft_printf("%#x - %#x : %d bytes\n", node + 1,
-			(char*)(node + 1) + node->size, node->size);
-		ret += node->size;
+		if (!node->is_free)
+		{
+			if ((char*)node == base)
+				ft_printf("%s : %#x\n", zone_name, base);
+			ft_printf("%#x - %#x : %d bytes\n", node + 1,
+				(char*)(node + 1) + node->size, node->size);
+			ret += node->size;
+		}
 		node = node->next;
 	}
 	return (ret);
