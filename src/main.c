@@ -48,7 +48,7 @@ bool	find_and_free_node(t_node **haystack, t_node *needle, bool unmap)
 	return (false);
 }
 
-void free(void *ptr)
+void	free(void *ptr)
 {
 	if (!ptr)
 		return ;
@@ -145,11 +145,11 @@ bool	find_node_size(t_node *haystack, t_node *needle, size_t *sz)
 	return (false);
 }
 
-void *realloc(void *ptr, size_t new_sz)
+void	*realloc(void *ptr, size_t new_sz)
 {
 	size_t	sz;
 	char	*new_ptr;
-	
+
 	if (!find_node_size(g_data.tiny.head, ptr - sizeof(t_node), &sz) &&
 		!find_node_size(g_data.small.head, ptr - sizeof(t_node), &sz) &&
 		!find_node_size(g_data.large, ptr - sizeof(t_node), &sz))

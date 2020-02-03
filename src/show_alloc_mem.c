@@ -14,7 +14,7 @@
 
 size_t	print_zone(t_zone *z, t_node *node, char *zone_name)
 {
-	size_t ret;
+	size_t	ret;
 	char	*base;
 
 	ret = 0;
@@ -52,7 +52,7 @@ size_t	print_large(t_node *node, char *zone_name)
 	return (ret);
 }
 
-void	show_alloc_mem()
+void	show_alloc_mem(void)
 {
 	size_t	total;
 
