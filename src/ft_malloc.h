@@ -24,6 +24,7 @@ typedef struct		s_node
 	size_t			size;
 	struct s_node	*next;
 	bool			is_free;
+	char			padding[8];
 }					t_node;
 
 typedef struct		s_zone
