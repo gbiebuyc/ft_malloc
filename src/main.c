@@ -69,6 +69,11 @@ char	*allocate_node(t_node **node, t_zone *z, size_t sz)
 	return ((char*)((*node) + 1));
 }
 
+intptr_t	align_ptr(intptr_t ptr)
+{
+	return ((ptr + 15) & ~15);
+}
+
 char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 {
 	t_node	*node;
@@ -96,7 +101,7 @@ char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 		last = node;
 		node = node->next;
 	}
-	last->next = (t_node*)((char*)(last + 1) + last->size);
+	last->next = (t_node*)(align_ptr((intptr_t)(last + 1) + last->size));
 	if ((char*)(last->next + 1) + sz - base >= z->prealloc_size)
 		return (allocate_node(&last->next, z, sz));
 	last->next->size = sz;
