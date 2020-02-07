@@ -36,9 +36,9 @@ bool	find_and_free_node(t_node **haystack, t_node *needle, bool unmap)
 			(*haystack)->is_free = true;
 			if (unmap)
 			{
-				tmp = (*haystack)->size;
+				tmp = (*haystack)->size + sizeof(t_node);
 				(*haystack) = (*haystack)->next;
-				if (munmap((void*)needle, tmp) < 0)
+				if (munmap((void*)needle, tmp) == -1)
 					return (false);
 			}
 			return (true);
@@ -66,7 +66,7 @@ char	*allocate_node(t_node **node, t_zone *z, size_t sz)
 	(*node)->size = sz;
 	(*node)->next = NULL;
 	(*node)->is_free = false;
-	return ((char*)(*node + 1));
+	return ((char*)((*node) + 1));
 }
 
 char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
@@ -85,7 +85,7 @@ char	*find_free_block(t_zone *z, size_t sz, size_t max_sz)
 	base = (char*)z->head;
 	while (node)
 	{
-		if ((char*)node < base || (char*)node - base >= z->prealloc_size)
+		if (((char*)node < base) || ((char*)node - base >= z->prealloc_size))
 			base = (char*)node;
 		if (node->is_free && node->size >= sz)
 		{
@@ -125,7 +125,6 @@ void	*malloc(size_t size)
 		return (find_free_block(&g_data.small, size, SMALL));
 	else
 		return (alloc_large(&g_data.large, size));
-	ft_printf("[debug] malloc failed.");
 	return (0);
 }
 
@@ -150,12 +149,29 @@ void	*realloc(void *ptr, size_t new_sz)
 	size_t	sz;
 	char	*new_ptr;
 
+	if (ptr == NULL)
+		return (malloc(new_sz));
+	if (new_sz == 0)
+	{
+		free(ptr);
+		return (0);
+	}
 	if (!find_node_size(g_data.tiny.head, ptr - sizeof(t_node), &sz) &&
 		!find_node_size(g_data.small.head, ptr - sizeof(t_node), &sz) &&
 		!find_node_size(g_data.large, ptr - sizeof(t_node), &sz))
 		return (NULL);
-	new_ptr = malloc(new_sz);
+	if (!(new_ptr = malloc(new_sz)))
+		return (NULL);
 	ft_memcpy(new_ptr, ptr, sz);
 	free(ptr);
 	return (new_ptr);
+}
+
+void			*calloc(size_t count, size_t size)
+{
+	void	*ret;
+
+	if (ret = malloc(count * size))
+		ft_bzero(ret, count * size);
+	return (ret);
 }

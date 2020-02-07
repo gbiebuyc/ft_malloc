@@ -24,7 +24,7 @@ LDFLAGS = -L ./libft -lft
 all: $(NAME) a.out
 
 a.out: test.c
-	gcc test.c -L. -lft_malloc -Wl,-rpath,.
+	gcc test.c ./libft_malloc.so
 
 $(NAME): $(OBJ)
 	make -C ./libft
