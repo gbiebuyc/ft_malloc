@@ -14,7 +14,7 @@
 
 bool	find_and_free_node(t_node **haystack, t_node *needle, bool unmap)
 {
-	size_t tmp;
+	size_t sz;
 
 	while (*haystack)
 	{
@@ -25,9 +25,9 @@ bool	find_and_free_node(t_node **haystack, t_node *needle, bool unmap)
 			(*haystack)->is_free = true;
 			if (unmap)
 			{
-				tmp = (*haystack)->size + sizeof(t_node);
+				sz = (*haystack)->size + sizeof(t_node);
 				(*haystack) = (*haystack)->next;
-				if (munmap((void*)needle, tmp) == -1)
+				if (munmap((void*)needle, sz) == -1)
 					return (false);
 			}
 			return (true);
