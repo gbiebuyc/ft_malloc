@@ -25,9 +25,9 @@ CFLAGS = -I ./libft -fPIC #-Wall -Wextra -Werror
 LDFLAGS = -L ./libft -lft
 .PHONY: all clean fclean re
 
-all: $(NAME) test/test
+all: $(NAME) test/test.out
 
-test/test: test/test.c
+test/test.out: test/test.c
 	gcc $^ -o $@ ./libft_malloc.so
 
 $(NAME): $(OBJ)
@@ -36,13 +36,13 @@ $(NAME): $(OBJ)
 	ln -sf $(NAME) libft_malloc.so
 
 clean:
-	#make -C ./libft clean
+	make -C ./libft clean
 	rm -rf $(OBJ)
 
 fclean:
-	#make -C ./libft fclean
+	make -C ./libft fclean
 	rm -rf $(OBJ)
 	rm -rf $(NAME)
-	rm -rf test/test
+	rm -rf test/test.out
 
 re: fclean all

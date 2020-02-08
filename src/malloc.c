@@ -12,7 +12,7 @@
 
 #include "ft_malloc.h"
 
-t_data g_data = {0};
+t_data g_data;
 
 t_node	*init_node(t_node *n, size_t sz, bool is_free, bool clear_next)
 {

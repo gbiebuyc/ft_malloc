@@ -93,7 +93,7 @@ SRC = ft_atoi.c \
 
 OBJ = $(SRC:.c=.o)
 NAME = libft.a
-CFLAGS = -Wall -Wextra -Werror -O3 -fPIC
+CFLAGS = -Wall -Wextra -Werror -fPIC
 .PHONY: all clean fclean re
 
 all: $(NAME)
