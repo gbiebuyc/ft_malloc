@@ -14,18 +14,19 @@
 
 size_t	print_zone(t_zone *z, t_node *node, char *zone_name)
 {
-	size_t	ret;
-	char	*base;
+	size_t		ret;
+	uintptr_t	base;
 
 	ret = 0;
-	base = (char*)node;
+	base = (uintptr_t)node;
 	while (node)
 	{
-		if ((char*)node < base || (char*)node - base >= z->prealloc_size)
-			base = (char*)node;
+		if (((uintptr_t)node < base) ||
+				((uintptr_t)node - base >= z->prealloc_size))
+			base = (uintptr_t)node;
 		if (!node->is_free)
 		{
-			if ((char*)node == base)
+			if ((uintptr_t)node == base)
 				ft_printf("%s : %#x\n", zone_name, base);
 			ft_printf("%#x - %#x : %d octets\n", node + 1,
 				(char*)(node + 1) + node->size, node->size);

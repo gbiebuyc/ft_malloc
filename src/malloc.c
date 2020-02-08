@@ -34,9 +34,9 @@ void	*init_node_in_new_zone(t_node **node, t_zone *z, size_t sz)
 
 void	*alloc_tiny_or_small(t_zone *z, size_t sz, size_t max_sz)
 {
-	t_node	*node;
-	t_node	*last;
-	char	*base;
+	t_node		*node;
+	t_node		*last;
+	uintptr_t	base;
 
 	if (!z->head)
 	{
@@ -44,18 +44,19 @@ void	*alloc_tiny_or_small(t_zone *z, size_t sz, size_t max_sz)
 		return (init_node_in_new_zone(&z->head, z, sz));
 	}
 	node = z->head;
-	base = (char*)z->head;
+	base = (uintptr_t)z->head;
 	while (node)
 	{
-		if (((char*)node < base) || ((char*)node - base >= z->prealloc_size))
-			base = (char*)node;
+		if (((uintptr_t)node < base) ||
+				((uintptr_t)node - base >= z->prealloc_size))
+			base = (uintptr_t)node;
 		if (node->is_free && node->size >= sz)
 			return (init_node(node, sz, false, false));
 		last = node;
 		node = node->next;
 	}
-	last->next = (t_node*)(align_ptr((intptr_t)(last + 1) + last->size));
-	if ((char*)(last->next + 1) + sz - base >= z->prealloc_size)
+	last->next = (t_node*)(align_ptr((uintptr_t)(last + 1) + last->size));
+	if (((uintptr_t)(last->next + 1) + sz - base) >= z->prealloc_size)
 		return (init_node_in_new_zone(&last->next, z, sz));
 	return (init_node(last->next, sz, false, true));
 }

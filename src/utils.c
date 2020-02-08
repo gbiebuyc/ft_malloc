@@ -12,7 +12,7 @@
 
 #include "ft_malloc.h"
 
-intptr_t	align_ptr(intptr_t ptr)
+uintptr_t	align_ptr(uintptr_t ptr)
 {
 	return ((ptr + 15) & ~15);
 }

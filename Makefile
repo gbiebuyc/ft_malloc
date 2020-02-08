@@ -21,7 +21,7 @@ SRC = src/malloc.c \
 	src/utils.c \
 	src/show_alloc_mem.c
 OBJ = $(SRC:.c=.o)
-CFLAGS = -I ./libft -fPIC #-Wall -Wextra -Werror
+CFLAGS = -I ./libft -fPIC -Wall -Wextra -Werror
 LDFLAGS = -L ./libft -lft
 .PHONY: all clean fclean re
 
