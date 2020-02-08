@@ -14,7 +14,11 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 NAME = libft_malloc_$(HOSTTYPE).so
-SRC = src/main.c \
+SRC = src/malloc.c \
+	src/calloc.c \
+	src/realloc.c \
+	src/free.c \
+	src/utils.c \
 	src/show_alloc_mem.c
 OBJ = $(SRC:.c=.o)
 CFLAGS = -I ./libft -fPIC #-Wall -Wextra -Werror

@@ -47,5 +47,7 @@ void				*malloc(size_t size);
 void				*realloc(void *ptr, size_t size);
 void				show_alloc_mem();
 void				*calloc(size_t count, size_t size);
+intptr_t			align_ptr(intptr_t ptr);
+size_t				get_prealloc_size(size_t elem_size, size_t pagesize);
 
 #endif
