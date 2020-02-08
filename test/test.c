@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
-#include "include/ft_malloc.h"
-#include "libft/libft.h"
+#include "../include/ft_malloc.h"
+#include "../libft/libft.h"
 
 int main()
 {
@@ -21,11 +21,11 @@ int main()
     show_alloc_mem();
     write(1, "\n", 1);
 
-    malloc(4300);
-    malloc(4400);
+    (void)malloc(4300);
+    (void)malloc(4400);
     char *p3 = malloc(4500);
-    malloc(4600);
-    malloc(4700);
+    (void)malloc(4600);
+    (void)malloc(4700);
     free(ptr2);
     free(p3);
     show_alloc_mem();

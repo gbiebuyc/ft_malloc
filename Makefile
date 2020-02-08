@@ -25,10 +25,10 @@ CFLAGS = -I ./libft -fPIC #-Wall -Wextra -Werror
 LDFLAGS = -L ./libft -lft
 .PHONY: all clean fclean re
 
-all: $(NAME) a.out
+all: $(NAME) test/test
 
-a.out: test.c
-	gcc test.c ./libft_malloc.so
+test/test: test/test.c
+	gcc $^ -o $@ ./libft_malloc.so
 
 $(NAME): $(OBJ)
 	make -C ./libft
@@ -43,5 +43,6 @@ fclean:
 	#make -C ./libft fclean
 	rm -rf $(OBJ)
 	rm -rf $(NAME)
+	rm -rf test/test
 
 re: fclean all
