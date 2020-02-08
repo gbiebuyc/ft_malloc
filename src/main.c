@@ -53,10 +53,9 @@ void	free(void *ptr)
 	if (!ptr)
 		return ;
 	ptr -= sizeof(t_node);
-	if (!find_and_free_node(&g_data.tiny.head, ptr, false) &&
-			!find_and_free_node(&g_data.small.head, ptr, false) &&
-				!find_and_free_node(&g_data.large, ptr, true))
-		*(volatile int*)0 = 0;
+	if (!find_and_free_node(&g_data.tiny.head, ptr, false))
+		if (!find_and_free_node(&g_data.small.head, ptr, false))
+			find_and_free_node(&g_data.large, ptr, true);
 }
 
 char	*allocate_node(t_node **node, t_zone *z, size_t sz)
