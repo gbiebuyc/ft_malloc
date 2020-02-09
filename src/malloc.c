@@ -28,7 +28,7 @@ void	*init_node_in_new_zone(t_node **node, t_zone *z, size_t sz)
 	(*node) = mmap(0, z->prealloc_size,
 		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 	if (*node == MAP_FAILED)
-		return (NULL);
+		return ((*node = NULL));
 	return (init_node(*node, sz, false, true));
 }
 
@@ -68,7 +68,7 @@ void	*alloc_large(t_node **node, size_t sz)
 	(*node) = mmap(0, sizeof(t_node) + sz,
 		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 	if (*node == MAP_FAILED)
-		return (NULL);
+		return ((*node = NULL));
 	return (init_node(*node, sz, false, true));
 }
 
