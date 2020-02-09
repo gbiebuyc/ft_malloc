@@ -27,8 +27,8 @@ size_t	print_zone(t_zone *z, t_node *node, char *zone_name)
 		if (!node->is_free)
 		{
 			if ((uintptr_t)node == base)
-				ft_printf("%s : %#x\n", zone_name, base);
-			ft_printf("%#x - %#x : %d octets\n", node + 1,
+				ft_printf("%s : %p\n", zone_name, base);
+			ft_printf("%p - %p : %zd octets\n", node + 1,
 				(char*)(node + 1) + node->size, node->size);
 			ret += node->size;
 		}
@@ -44,8 +44,8 @@ size_t	print_large(t_node *node, char *zone_name)
 	ret = 0;
 	while (node)
 	{
-		ft_printf("%s : %#x\n", zone_name, node);
-		ft_printf("%#x - %#x : %d octets\n", node + 1,
+		ft_printf("%s : %p\n", zone_name, node);
+		ft_printf("%p - %p : %zd octets\n", node + 1,
 			(char*)(node + 1) + node->size, node->size);
 		ret += node->size;
 		node = node->next;
@@ -64,5 +64,5 @@ void	show_alloc_mem(void)
 		total += print_zone(&g_data.small, g_data.small.head, "SMALL");
 	if (g_data.large)
 		total += print_large(g_data.large, "LARGE");
-	ft_printf("Total : %d octets\n", total);
+	ft_printf("Total : %zd octets\n", total);
 }
