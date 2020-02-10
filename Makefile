@@ -43,6 +43,7 @@ fclean:
 	make -C ./libft fclean
 	rm -rf $(OBJ)
 	rm -rf $(NAME)
+	rm -rf libft_malloc.so
 	rm -rf test/test.out
 
 re: fclean all
