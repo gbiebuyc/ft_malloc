@@ -23,12 +23,14 @@ SRC = src/malloc.c \
 OBJ = $(SRC:.c=.o)
 CFLAGS = -I ./libft -fPIC -Wall -Wextra -Werror
 LDFLAGS = -L ./libft -lft
-.PHONY: all clean fclean re
+.PHONY: all test clean fclean re
 
-all: $(NAME) test/test.out
+all: $(NAME)
 
-test/test.out: test/test.c
-	gcc $^ -o $@ ./libft_malloc.so
+test: $(NAME) test.out
+
+test.out: src/test.c
+	$(CC) $^ -o $@ ./libft/libft.a ./libft_malloc.so
 
 $(NAME): $(OBJ)
 	make -C ./libft
@@ -44,6 +46,6 @@ fclean:
 	rm -rf $(OBJ)
 	rm -rf $(NAME)
 	rm -rf libft_malloc.so
-	rm -rf test/test.out
+	rm -rf test.out
 
 re: fclean all

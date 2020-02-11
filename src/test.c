@@ -10,10 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdio.h>
 #include "../include/ft_malloc.h"
 #include "../libft/libft.h"
 
@@ -27,7 +23,7 @@ int	main(void)
 	i = 0;
 	while (i++ < 3)
 		ptr = malloc(30);
-	strcpy(ptr, "hello world\n");
+	ft_strcpy(ptr, "hello world\n");
 	show_alloc_mem();
 	write(1, "\n", 1);
 	ptr2 = realloc(ptr, 42000);
