@@ -15,6 +15,7 @@
 
 # include <libft.h>
 # include <sys/mman.h>
+# include <pthread.h>
 
 # define TINY 0x100
 # define SMALL 0x1000
@@ -41,13 +42,18 @@ typedef struct		s_data
 }					t_data;
 
 extern t_data g_data;
+extern pthread_mutex_t mutex;
 
 void				free(void *ptr);
+void				free_main(void *ptr);
 void				*malloc(size_t size);
+void				*malloc_main(size_t size);
 void				*realloc(void *ptr, size_t size);
 void				show_alloc_mem();
 void				*calloc(size_t count, size_t size);
 uintptr_t			align_ptr(uintptr_t ptr);
 size_t				get_prealloc_size(size_t elem_size, size_t pagesize);
+void				*init_node(t_node *n, size_t sz, bool f, bool c);
+void				*init_node_in_new_zone(t_node **n, t_zone *z, size_t sz);
 
 #endif

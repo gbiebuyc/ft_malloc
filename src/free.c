@@ -37,7 +37,7 @@ bool	find_and_free_node(t_node **haystack, t_node *needle, bool unmap)
 	return (false);
 }
 
-void	free(void *ptr)
+void	free_main(void *ptr)
 {
 	if (!ptr)
 		return ;
@@ -45,4 +45,12 @@ void	free(void *ptr)
 	if (!find_and_free_node(&g_data.tiny.head, ptr, false))
 		if (!find_and_free_node(&g_data.small.head, ptr, false))
 			find_and_free_node(&g_data.large, ptr, true);
+}
+
+void	free(void *ptr)
+{
+	if (pthread_mutex_lock(&mutex) != 0)
+		return ;
+	free_main(ptr);
+	pthread_mutex_unlock(&mutex);
 }

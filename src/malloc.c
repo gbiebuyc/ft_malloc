@@ -13,24 +13,7 @@
 #include "ft_malloc.h"
 
 t_data g_data;
-
-void	*init_node(t_node *n, size_t sz, bool is_free, bool clear_next)
-{
-	n->size = sz;
-	n->is_free = is_free;
-	if (clear_next)
-		n->next = NULL;
-	return ((void*)(n + 1));
-}
-
-void	*init_node_in_new_zone(t_node **node, t_zone *z, size_t sz)
-{
-	(*node) = mmap(0, z->prealloc_size,
-		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-	if (*node == MAP_FAILED)
-		return ((*node = NULL));
-	return (init_node(*node, sz, false, true));
-}
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void	*alloc_tiny_or_small(t_zone *z, size_t sz, size_t max_sz)
 {
@@ -72,7 +55,7 @@ void	*alloc_large(t_node **node, size_t sz)
 	return (init_node(*node, sz, false, true));
 }
 
-void	*malloc(size_t size)
+void	*malloc_main(size_t size)
 {
 	if (size <= TINY)
 		return (alloc_tiny_or_small(&g_data.tiny, size, TINY));
@@ -81,4 +64,15 @@ void	*malloc(size_t size)
 	else
 		return (alloc_large(&g_data.large, size));
 	return (0);
+}
+
+void	*malloc(size_t size)
+{
+	void *ret;
+
+	if (pthread_mutex_lock(&mutex) != 0)
+		return (0);
+	ret = malloc_main(size);
+	pthread_mutex_unlock(&mutex);
+	return (ret);
 }

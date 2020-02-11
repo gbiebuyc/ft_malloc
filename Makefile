@@ -19,6 +19,7 @@ SRC = src/malloc.c \
 	src/realloc.c \
 	src/free.c \
 	src/utils.c \
+	src/init_node.c \
 	src/show_alloc_mem.c
 OBJ = $(SRC:.c=.o)
 CFLAGS = -I ./libft -fPIC -Wall -Wextra -Werror
