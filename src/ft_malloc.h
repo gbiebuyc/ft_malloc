@@ -17,8 +17,8 @@
 # include <sys/mman.h>
 # include <pthread.h>
 
-# define TINY 0x100
-# define SMALL 0x1000
+# define TINY   1024
+# define SMALL  32768
 
 typedef struct		s_node
 {
