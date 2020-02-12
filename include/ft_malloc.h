@@ -10,6 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+** This is the public interface header.
+** Internal header is in src/ directory.
+*/
+
 #ifndef FT_MALLOC_H
 # define FT_MALLOC_H
 
