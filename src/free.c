@@ -49,8 +49,8 @@ void	free_main(void *ptr)
 
 void	free(void *ptr)
 {
-	if (pthread_mutex_lock(&mutex) != 0)
+	if (pthread_mutex_lock(&g_mutex) != 0)
 		return ;
 	free_main(ptr);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&g_mutex);
 }

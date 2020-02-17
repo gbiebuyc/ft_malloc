@@ -57,7 +57,7 @@ void	show_alloc_mem(void)
 {
 	size_t	total;
 
-	if (pthread_mutex_lock(&mutex) != 0)
+	if (pthread_mutex_lock(&g_mutex) != 0)
 		return ;
 	total = 0;
 	if (g_data.tiny.head)
@@ -67,5 +67,5 @@ void	show_alloc_mem(void)
 	if (g_data.large)
 		total += print_large(g_data.large, "LARGE");
 	ft_printf("Total : %zd octets\n", total);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&g_mutex);
 }

@@ -13,7 +13,7 @@
 #include "ft_malloc.h"
 
 t_data g_data;
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void	*alloc_tiny_or_small(t_zone *z, size_t sz, size_t max_sz)
 {
@@ -70,9 +70,9 @@ void	*malloc(size_t size)
 {
 	void *ret;
 
-	if (pthread_mutex_lock(&mutex) != 0)
+	if (pthread_mutex_lock(&g_mutex) != 0)
 		return (0);
 	ret = malloc_main(size);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&g_mutex);
 	return (ret);
 }

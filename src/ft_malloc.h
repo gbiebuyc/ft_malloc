@@ -42,7 +42,7 @@ typedef struct		s_data
 }					t_data;
 
 extern t_data g_data;
-extern pthread_mutex_t mutex;
+extern pthread_mutex_t g_mutex;
 
 void				free(void *ptr);
 void				free_main(void *ptr);

@@ -55,9 +55,9 @@ void	*realloc(void *ptr, size_t new_sz)
 {
 	void *ret;
 
-	if (pthread_mutex_lock(&mutex) != 0)
+	if (pthread_mutex_lock(&g_mutex) != 0)
 		return (0);
 	ret = realloc_main(ptr, new_sz);
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&g_mutex);
 	return (ret);
 }
